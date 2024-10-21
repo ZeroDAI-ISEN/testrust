@@ -1,0 +1,30 @@
+name: Rust CI
+
+on:
+  pull_request: null
+  push:
+    branches:
+      - main
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: RustSec
+        uses: rustsec/audit-check@v2.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Lint
+        run: cargo clippy --verbose
+      - name: Build
+        run: cargo build --verbose
+      - name: Test
+        run: cargo test --verbose
+      - name: Generate docs
+        run: cargo doc --verbose
+      - name: See what is generated
+        run: ls -laR
