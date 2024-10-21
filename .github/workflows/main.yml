@@ -20,11 +20,21 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint
         run: cargo clippy --verbose
-      - name: Build
+      - name: Build debug
         run: cargo build --verbose
+      - name: Build release
+        run: cargo build --release --verbose
       - name: Test
         run: cargo test --verbose
       - name: Generate docs
         run: cargo doc --verbose
-      - name: See what is generated
-        run: ls -laR
+      - name: Upload build release
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build
+          path: target/release
+      - name: Upload docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Documentation
+          path: target/doc
